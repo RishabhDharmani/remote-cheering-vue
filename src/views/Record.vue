@@ -9,9 +9,7 @@ import recordButtons from '@/components/recordButtons.vue'
       <button class="recordbuttons" @click="record" :disabled="recordToggle">Record</button>
       <button class="recordbuttons" @click="pause" :disabled="pauseToggle">{{pauseText}}</button>  
       <button class="recordbuttons" @click="stop" :disabled="stopToggle">Stop</button>  
-
-     <canvas id="slide"></canvas>                               <!--- Visualizer ---->
-    </v-main>
+  </v-main>
 </template>
 
 
