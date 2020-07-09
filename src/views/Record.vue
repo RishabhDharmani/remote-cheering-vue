@@ -6,34 +6,55 @@ import recordButtons from '@/components/recordButtons.vue'
       <br><br><br>	
       <h1>Remote Cheering</h1>
 
-      <button class="recordbuttons" @click="record">Record</button> 
-      <button class="recordbuttons" @click="stop">Stop</button>  
+      <button class="recordbuttons" @click="record" :disabled="recordToggle">Record</button>
+      <button class="recordbuttons" @click="pause" :disabled="pauseToggle">{{pauseText}}</button>  
+      <button class="recordbuttons" @click="stop" :disabled="stopToggle">Stop</button>  
 
      <canvas id="slide"></canvas>                               <!--- Visualizer ---->
     </v-main>
 </template>
 
+
+
+
 <script>
 
 	var gumStream;
-	var AudioContext= window.AudioContext || window.webkitAudioContext;
-	//var bufferLength;
+	var fbc_array;
+	var AudioContext = window.AudioContext || window.webkitAudioContext;
+	var flag;
+	var analyser;
 
 	export default {
 
+	data() {
+		return{
+			recordToggle: false,
+			pauseToggle: true,
+			stopToggle: true,
+
+			pauseText: 'Pause',
+		}		
+	},	
+
 	methods: {
-		record: function() {
+		record: function recording() {
 
 			console.log("recordButton clicked");
 			var constraints = { audio: true, video:false }
+
+			this.recordToggle = true;
+			this.pauseToggle = false;
+			this.stopToggle = false;
+			flag= false;
 
 			navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
 
 				console.log("getUserMedia() success");
 
-				var audioContext= new AudioContext();
+				var audioContext = new AudioContext();
 
-				var analyser = audioContext.createAnalyser();
+				analyser = audioContext.createAnalyser();
 
 				gumStream = stream;
 
@@ -41,21 +62,40 @@ import recordButtons from '@/components/recordButtons.vue'
 
 				input.connect(analyser);
 
-				analyser.fftSize = 1024;
-				//bufferLength = analyser.frequencyBinCount;
+				analyser.fftSize = 512;
 
-			}
-
-				console.log("Recording started");
+				fbc_array = new Uint8Array(analyser.frequencyBinCount);
+				analyser.getByteFrequencyData(fbc_array);
+				console.log(fbc_array);
 			})
+		},
+
+		pause: function() {
+			if (flag ===false){
+				//pause
+				this.pauseText="Resume";
+				flag = true;
+			}
+			else{
+				//resume
+				this.pauseText="Pause";
+				flag = false;
+	}
 		},
 
 		stop: function() {
 			console.log("stopButton clicked");
 			gumStream.getAudioTracks()[0].stop();
+			this.pauseText = 'Pause';
+			flag= true;
+			this.recordToggle = false;
+			this.pauseToggle = true;
+			this.stopToggle = true;
 		}
 	}
 }
+
+
 </script>
 
 <style scoped>
