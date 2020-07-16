@@ -1,5 +1,3 @@
-import recordButtons from '@/components/recordButtons.vue'
-
 <template>
   <v-main id="controls" fluid>
 
@@ -8,7 +6,9 @@ import recordButtons from '@/components/recordButtons.vue'
 
       <button class="recordbuttons" @click="record" :disabled="recordToggle">Record</button>
       <button class="recordbuttons" @click="pause" :disabled="pauseToggle">{{pauseText}}</button>  
-      <button class="recordbuttons" @click="stop" :disabled="stopToggle">Stop</button>  
+      <button class="recordbuttons" @click="stop" :disabled="stopToggle">Stop</button> 
+
+      <canvas id="slide"></canvas>
   </v-main>
 </template>
 
@@ -17,14 +17,83 @@ import recordButtons from '@/components/recordButtons.vue'
 
 <script>
 
+	import Vue from 'vue'
+
 	var gumStream;
 	var fbc_array;
 	var AudioContext = window.AudioContext || window.webkitAudioContext;
 	var flag;
 	var analyser;
+	var average_array =[];
+
+	var vm = new Vue({
+		methods: {
+			frameLooper: function frameLooper() {
+				if(flag) return;
+
+				//start taking frames as inputs		
+				window.requestAnimationFrame(frameLooper);
+
+				//array to store frequency data of each frame
+				fbc_array = new Uint8Array(analyser.frequencyBinCount);
+				analyser.getByteFrequencyData(fbc_array);
+				//console.log(fbc_array);
+
+				vm.Visualizer(fbc_array);
+				average_array.push(vm.average(fbc_array));
+			},
+
+			Visualizer(fbc_array){
+				var canvas = document.getElementById("slide");
+				var ctx = canvas.getContext("2d");
+
+				//defines the width and height of the visualizer
+				var WIDTH = canvas.width;
+				var HEIGHT = canvas.height;
+
+				//define width and height of each bar of frequency
+				var barWidth = (WIDTH/256);
+				var barHeight;
+				var x = 0;
+
+				//initial colour black
+				ctx.fillStyle = "#3aafa9";
+				ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+				//loop for each frequency bar height
+				for (var i = 0; i < 256; i++) {
+					barHeight = fbc_array[i];
+
+					//filling according to colors
+					ctx.fillStyle = "#000";
+					ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+
+					x += barWidth;
+				}
+			},
+
+			average(fbc_array){
+
+				var sum1=0;
+				var sum2=0;
+				var avg=0;
+
+				for(var i =0; i<256; i++){
+					sum1+=(fbc_array[i]*(i+1));
+					sum2+=fbc_array[i];
+				}
+
+				if(sum2===0)
+					avg=0;
+				else
+					avg=(sum1*22100)/(sum2*256);
+
+				return avg;		
+			}
+		}
+	})
 
 	export default {
-
 	data() {
 		return{
 			recordToggle: false,
@@ -36,7 +105,7 @@ import recordButtons from '@/components/recordButtons.vue'
 	},	
 
 	methods: {
-		record: function recording() {
+		record: function() {
 
 			console.log("recordButton clicked");
 			var constraints = { audio: true, video:false }
@@ -45,6 +114,7 @@ import recordButtons from '@/components/recordButtons.vue'
 			this.pauseToggle = false;
 			this.stopToggle = false;
 			flag= false;
+			average_array=[0];
 
 			navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
 
@@ -62,9 +132,8 @@ import recordButtons from '@/components/recordButtons.vue'
 
 				analyser.fftSize = 512;
 
-				fbc_array = new Uint8Array(analyser.frequencyBinCount);
-				analyser.getByteFrequencyData(fbc_array);
-				console.log(fbc_array);
+				vm.frameLooper();
+
 			})
 		},
 
@@ -78,7 +147,7 @@ import recordButtons from '@/components/recordButtons.vue'
 				//resume
 				this.pauseText="Pause";
 				flag = false;
-	}
+			}
 		},
 
 		stop: function() {
@@ -89,10 +158,11 @@ import recordButtons from '@/components/recordButtons.vue'
 			this.recordToggle = false;
 			this.pauseToggle = true;
 			this.stopToggle = true;
+
+			//console.log(average_array);
 		}
 	}
 }
-
 
 </script>
 
@@ -176,8 +246,9 @@ h1 {
 /********************* Visualizer *************************/
 
 #slide {
+	margin-top: 100px;
     background-color: #3aafa9;
-    height: 200px;
+    height: 300px;
     width: 100%;
 }
 </style>
