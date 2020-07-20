@@ -18,6 +18,7 @@
 <script>
 
 	import Vue from 'vue'
+	import store from '@/store/index'
 
 	var gumStream;
 	var fbc_array;
@@ -26,7 +27,9 @@
 	var analyser;
 	var average_array =[];
 
+
 	var vm = new Vue({
+		store,
 		methods: {
 			frameLooper: function frameLooper() {
 				if(flag) return;
@@ -101,8 +104,12 @@
 			stopToggle: true,
 
 			pauseText: 'Pause',
+
+			startTime: 0,
+			endTime: 0,
 		}		
 	},	
+	store,
 
 	methods: {
 		record: function() {
@@ -115,10 +122,17 @@
 			this.stopToggle = false;
 			flag= false;
 			average_array=[0];
+			this.startTime = new Date();
 
-			navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+			navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 
 				console.log("getUserMedia() success");
+
+				var time = this.startTime.getHours() + ":" + this.startTime.getMinutes() + ":" + this.startTime.getSeconds();
+
+				store.dispatch('startTime', time);
+
+				console.log(time);
 
 				var audioContext = new AudioContext();
 
@@ -158,6 +172,16 @@
 			this.recordToggle = false;
 			this.pauseToggle = true;
 			this.stopToggle = true;
+
+			store.dispatch('addArray', average_array);
+
+			this.endTime = new Date();
+
+			var time = this.endTime.getHours() + ":" + this.endTime.getMinutes() + ":" + this.endTime.getSeconds();
+
+			store.dispatch('endTime', time);
+
+			console.log(time);
 
 			//console.log(average_array);
 		}
