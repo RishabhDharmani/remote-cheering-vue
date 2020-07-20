@@ -3,8 +3,10 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+//creating routes for navigation
   const routes = [
   {
+    //About page routes
     path: '/',
     components: {
       default: () => import('@/views/About.vue'),
@@ -12,6 +14,7 @@ Vue.use(VueRouter)
     }
   },
   {
+    //Recording page routes
     path: '/record',
     components: {
       
@@ -20,6 +23,7 @@ Vue.use(VueRouter)
     }
   },
   {
+    //History page routes
     path: '/history',
     components: {
       default: () => import('@/views/History.vue'),

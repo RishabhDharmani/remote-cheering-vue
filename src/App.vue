@@ -1,6 +1,8 @@
 <template>
   <v-app id="app">
     <div class="mx-0 d-flex flex">
+
+      <!-- Router and Navigation -->
       <router-view name="sidebar"/>
       <router-view/>
     </div>    

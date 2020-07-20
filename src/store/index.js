@@ -11,34 +11,45 @@ export default new Vuex.Store({
     endTime: 0
   },
 
+  //changing state of variables 
   mutations: {
+
+	//array state
 	ADD_ARRAY(state, event){
 		state.data_array.push(event);
 	},
 
+	//start time state
 	START_TIME(state, event){
 		state.startTime = event;
 	},
 
+	//end time state
 	END_TIME(state, event){
 		state.endTime = event;
 	},
   },
 
+  //called in components for saving state
   actions: {
+
+	//array stae
 	addArray({commit}, event){
 		commit('ADD_ARRAY', event);
 	},
 
+	//start time state
 	startTime({commit}, event){
 		commit('START_TIME', event);
 	},
 
+	//end time state
 	endTime({commit}, event){
 		commit('END_TIME', event);
 	},
   },
 
+  //accessing states in components
   getters: {
 	data_array: state => state.data_array,
 	startTime: state => state.startTime,
