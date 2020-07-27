@@ -1,18 +1,14 @@
-<template>
-	<div></div>
-</template>
-
 <script>
-	import Visualizer from '@/components/visualizer'
+	import vz from '@/components/visualizer'
+	import Vue from 'vue'
 
-	export default {
+	var fl = new Vue ({
 		data() {
-		return{
-			audioContext: window.AudioContext || window.webkitAudioContext,
-			fbc_array: [],
-		}		
-	},
-		Visualizer,
+			return{
+				audioContext: window.AudioContext || window.webkitAudioContext,
+				fbc_array: [],
+			}		
+		},
 		methods: {
 
 			//Loops and collects audio frames to be used
@@ -29,7 +25,7 @@
 				console.log(this.fbc_array);
 
 				// Call Visualizer
-				Visualizer.Visualizer(this.fbc_array);
+				vz.Visualizer(this.fbc_array);
 
 				// Average of frequencies per audio frame
 				average_array.push(this.average(this.fbc_array));
@@ -58,5 +54,9 @@
 				return avg;		
 			}
 		}
+	})
+
+	export default{
+		fl
 	}
 </script>

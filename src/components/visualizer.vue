@@ -7,12 +7,6 @@
 <script>
 	
 	export default {
-		data() {
-		return{
-			audioContext: window.AudioContext || window.webkitAudioContext,
-
-		}		
-	},
 		methods: {
 			Visualizer(fbc_array){
 
