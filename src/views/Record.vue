@@ -130,7 +130,7 @@
 				if(sum2===0)
 					avg=0;
 				else
-					avg=(sum1)/(sum2);
+					avg=((sum1)*22000)/(256*(sum2));
 
 				return avg;		
 			}

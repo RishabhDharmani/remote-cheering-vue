@@ -1,7 +1,7 @@
 <template>
   <div class="history">
 	<br><br><br>
-	<line-example :width="1500" :height="500"></line-example>
+	<line-example :width="1500" :height="300"></line-example>
   </div>
 </template>
 

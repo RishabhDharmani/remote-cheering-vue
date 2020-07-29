@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     // variables and collections here
     data_array: [],
-    startTime: 0,
-    endTime: 0
+    startTime: [],
+    endTime: [],
   },
 
   //changing state of variables 
@@ -21,12 +21,12 @@ export default new Vuex.Store({
 
 	//start time state
 	START_TIME(state, event){
-		state.startTime = event;
+		state.startTime.push(event);
 	},
 
 	//end time state
 	END_TIME(state, event){
-		state.endTime = event;
+		state.endTime.push(event);
 	},
   },
 
