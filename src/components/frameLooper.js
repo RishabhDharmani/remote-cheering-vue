@@ -1,8 +1,7 @@
-<script>
-	import vz from '@/components/visualizer'
-	import Vue from 'vue'
 
-	var fl = new Vue ({
+	import vz from '@/components/visualizer'
+
+	export default {
 		data() {
 			return{
 				audioContext: window.AudioContext || window.webkitAudioContext,
@@ -53,10 +52,5 @@
 
 				return avg;		
 			}
-		}
-	})
-
-	export default{
-		fl
+		},
 	}
-</script>

@@ -1,17 +1,16 @@
 <template>
   <div class="history">
-	<canvas id="planet-chart"></canvas>
+	<br><br><br>
+	<line-example :width="1500" :height="500"></line-example>
   </div>
 </template>
 
 <script>
-	import store from '@/store/index'
-	//import chart from 'chartjs'
-
-		console.log(store.state.startTime);
-		console.log(store.state.endTime);
-	export default {
+import LineExample from '@/components/graph.js'
+export default {
+  name: 'tes',
+  components: {
+	LineExample
   }
-
+}
 </script>
-

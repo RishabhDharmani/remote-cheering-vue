@@ -10,7 +10,7 @@
       <button class="recordbuttons" @click="pause" :disabled="pauseToggle">{{pauseText}}</button>  
       <button class="recordbuttons" @click="stop" :disabled="stopToggle">Stop</button> 
 
-      <!-- Visulaizer -->
+      <!-- Visualizer -->
 
       <canvas id="slide"></canvas>
   </v-main>
@@ -22,8 +22,6 @@
 <script>
 
 	import store from '@/store/index'
-	//import fl from '@/components/frameLooper'
-	// import Vz from '@/components/visualizer'
 	import Vue from 'vue'
 
 	//global variables defined
@@ -41,6 +39,7 @@
 			return{
 				count: 0,
 				count2: 0,
+				websocket: new WebSocket("wss://localhost:8080"),
 			}
 		},
 		methods: {
@@ -57,13 +56,17 @@
 				analyser.getByteFrequencyData(fbc_array);
 				
 				fl.count2+=1;
-				if(fbc_array[115]>150) fl.count++;
+				if(fbc_array[119]>140) fl.count++;
 
-				if(fl.count===10 && fl.count2<=4000) 
+				if(fl.count===10 && fl.count2<=4000) {
+					console.log("clap");
+					if(fl.websocket.readyState===WebSocket.OPEN)
 					{
-						console.log("clap");
-						fl.count=0;
+						fl.websocket.send("clap");
 					}
+					fl.count=0;
+				}
+					
 				if(fl.count2===4000)
 				{
 					fl.count=0;
@@ -247,6 +250,12 @@
 			//storing average data array using Vuex management
 			//console.log(average_array);
 			store.dispatch('addArray', average_array);
+
+			if (fl.websocket.readyState === WebSocket.OPEN){
+
+				fl.websocket.close();
+				console.log("Websocket Closed");
+			}
 
 			//taking ending time
 			this.endTime = new Date();
