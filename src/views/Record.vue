@@ -220,7 +220,7 @@
 				analyser.fftSize = 512;
 
 				//Frame looper function called
-				fl.frameLooper(average_array, analyser, flag);
+				fl.frameLooper();
 
 			})
 		},
@@ -237,6 +237,7 @@
 				//resume
 				this.pauseText="Pause";
 				flag = false;
+				fl.frameLooper();
 			}
 		},
 

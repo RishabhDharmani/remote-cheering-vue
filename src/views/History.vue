@@ -27,11 +27,14 @@ export default {
 
 	},
 	methods: {
+		//updating graph data
 		updateArray(){
 			store.state.graph_array = [];
 			for(var j=0; j<store.state.data_array.length; j++){
 
 				var dataObject;
+
+				//labels of graphs
 				var label_array = [];
 				label_array.push(store.state.startTime[j]);
 				for(var k=1; k< store.state.data_array[j].length -1; k++){
@@ -39,6 +42,7 @@ export default {
 				}
 				label_array.push(store.state.endTime[j]);
 
+				//datasets of graphs
 				var datasets= [
 				{
 					label: "Audio "+(j+1),
@@ -46,11 +50,13 @@ export default {
 				}
 				]
 
+				//combined datasets and labels
 				dataObject = {
 					labels: label_array,
 					datasets: datasets,
 				}
 
+				//pushing data to the final array
 				this.datas.push(dataObject);
 			}
 		},
