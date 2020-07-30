@@ -18,7 +18,7 @@ const options = {
 };
 
 //defining the static files folder
-app.use(express.static("dist"));			
+app.use(express.static("docs"));			
 
 //defining https server using credentials and app
 var httpsServer = https.createServer(options, app);
