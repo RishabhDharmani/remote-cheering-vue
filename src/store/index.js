@@ -9,6 +9,7 @@ export default new Vuex.Store({
     data_array: [],
     startTime: [],
     endTime: [],
+    graph_array:[],
   },
 
   //changing state of variables 

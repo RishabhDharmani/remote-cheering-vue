@@ -36,8 +36,6 @@ socketServer.on('connection', function(data){
 
 	data.on('message', function(message){
 
-		//variable to store arrays of data recieved
-		//var bytearray = new Uint8Array(message);
 		console.log(message);
 	});	
 });

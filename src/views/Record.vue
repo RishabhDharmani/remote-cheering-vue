@@ -55,18 +55,25 @@
 				fbc_array = new Uint8Array(256);
 				analyser.getByteFrequencyData(fbc_array);
 				
+				//count of frames
 				fl.count2+=1;
+
+				//bin 119 chosen for clap detection (closest frequency of clap)
+				//if amplitude of bin 119 is more than 140, it is noted
 				if(fbc_array[119]>140) fl.count++;
 
+				//if we find 10 frames with clap in 2000 frames then clap signal sent 
 				if(fl.count===10 && fl.count2<=4000) {
 					console.log("clap");
 					if(fl.websocket.readyState===WebSocket.OPEN)
 					{
 						fl.websocket.send("clap");
 					}
+					//reset count
 					fl.count=0;
 				}
-					
+				
+				//reset both counts
 				if(fl.count2===4000)
 				{
 					fl.count=0;
@@ -180,6 +187,8 @@
 
 			//recording starting time
 			this.startTime = new Date();
+
+			fl.websocket = new WebSocket("wss://localhost:8080");
 
 			navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 
